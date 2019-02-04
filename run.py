@@ -58,11 +58,10 @@ def _validate_ip(ip):
 
 def cli_parser():
     parser = argparse.ArgumentParser()
+    parser.add_argument('user')
+    parser.add_argument('password')
     parser.add_argument('-s', '--server', dest='servers', type=_k8s_node_ips, action='append', default=[])
     parser.add_argument('-c', '--client', dest='clients', type=_validate_ip, action='append', default=[])
-    parser.add_argument('-u', '--user', default='iguazio')
-    parser.add_argument('-p', '--password', default='')
-    parser.add_argument('-n', '--naipi-config')
     parser.add_argument('-r', '--reset', action='store_true',
                         help='do reset before deploy, delete restart docker, dont run from within k8s cluster')
     return parser.parse_args()
@@ -73,11 +72,7 @@ def main():
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_fmt)
 
     args = cli_parser()
-    if args.naipi_config:
-        gen_templates.from_naipi(args.naipi_config)
-    else:
-        gen_templates.from_cli(args.servers, args.clients, args.user, args.password)
-
+    gen_templates.from_cli(args.servers, args.clients, args.user, args.password)
     run(args.reset)
 
 

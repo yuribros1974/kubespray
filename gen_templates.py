@@ -1,34 +1,8 @@
-import json
-import socket
 import shutil
 import logging
 import subprocess
 
 import jinja2
-import paramiko
-
-
-def get_interafce_ip_addr(hostname, username, password, interface):
-    """
-        SSH to a host and get its IP
-    """
-    try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        # Connect to remote host
-        ssh.connect(hostname=hostname, username=username, password=password, timeout=15)
-        cmd = "/usr/sbin/ip -4 -o addr show dev {}|awk '{{print $4}}'|cut -d '/' -f1".format(interface)
-        _, stdout, _ = ssh.exec_command(cmd)
-        mlnx_ip = stdout.read().strip()
-
-        # Validate it's an IP
-        socket.inet_aton(mlnx_ip)
-
-        # Close SSH connection
-        ssh.close()
-    except Exception:
-        raise Exception('Failed to connect/get bond0 IP from {}'.format(hostname))
-    return mlnx_ip
 
 
 class ClientNode(object):
@@ -45,11 +19,11 @@ class ClientNode(object):
 
 class ServerHost(object):
 
-    def __init__(self, mgmt_ip, user, password, data_interface, has_etcd, is_master):
+    def __init__(self, mgmt_ip, user, password, data_ip, has_etcd, is_master):
         self.mgmt_ip = mgmt_ip
         self.user = user
         self.password = password
-        self.data_ip = get_interafce_ip_addr(mgmt_ip, user, password, data_interface)
+        self.data_ip = data_ip
         self.has_etcd = has_etcd
         self.is_master = is_master
 
@@ -83,9 +57,9 @@ def _gen_templates(path, **kwargs):
 
 def get_servers(ips, user, password):
     masters_count = 3 if len(ips) >= 3 else 1
-    for i, (mgmt_ip, data_iface) in enumerate(ips):
+    for i, (mgmt_ip, data_ip) in enumerate(ips):
         is_master = i < masters_count
-        yield ServerHost(mgmt_ip, user, password, data_iface, has_etcd=is_master, is_master=is_master)
+        yield ServerHost(mgmt_ip, user, password, data_ip, has_etcd=is_master, is_master=is_master)
 
 
 def gen(servers, clients):
@@ -96,18 +70,6 @@ def gen(servers, clients):
 
     logging.info('generating template files')
     _gen_templates(path='inventory/igz/hosts.ini', servers=servers, clients=clients)
-
-
-def from_naipi(data):
-    config = json.loads(data)['setup']
-    servers = (ServerHost.from_naipi(c) for c in config['clients'])
-    servers = [s for s in servers if s is not None]
-    if servers:
-        clients = [ClientNode.from_naipi(c) for c in config['nodes']]
-    else:
-        clients = []
-
-    gen(servers, clients)
 
 
 def from_cli(servers, clients, user, password):
