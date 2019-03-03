@@ -46,9 +46,6 @@ class ClientNode(object):
 class ServerHost(object):
 
     def __init__(self, mgmt_ip, user, password, data_interface, has_etcd, is_master):
-        if data_interface is None:
-            data_interface = 'bond0'
-
         self.mgmt_ip = mgmt_ip
         self.user = user
         self.password = password
@@ -65,7 +62,7 @@ class ServerHost(object):
         mgmt_ip = config['address']
         user = config['username']
         password = config['password']
-        data_interface = config.get('dataplane-interface')
+        data_interface = config.get('dataplane-interface', 'bond0')
 
         return cls(mgmt_ip, user, password, data_interface,
                    has_etcd='kube-etcd' in roles, is_master='kube-master' in roles)
@@ -86,16 +83,9 @@ def _gen_templates(path, **kwargs):
 
 def get_servers(ips, user, password):
     masters_count = 3 if len(ips) >= 3 else 1
-    for i, server in enumerate(ips):
-        server_args = server.split(',')
-        try:
-            mgmt_ip, data_interface = server_args
-        except ValueError:
-            mgmt_ip, = server_args
-            data_interface = None
-
+    for i, (mgmt_ip, data_iface) in enumerate(ips):
         is_master = i < masters_count
-        yield ServerHost(mgmt_ip, user, password, data_interface, has_etcd=is_master, is_master=is_master)
+        yield ServerHost(mgmt_ip, user, password, data_iface, has_etcd=is_master, is_master=is_master)
 
 
 def gen(servers, clients):

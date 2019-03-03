@@ -41,9 +41,13 @@ def run(do_reset):
 
 
 def _k8s_node_ips(args):
-    mgmt, data = args.split(',')
+    try:
+        mgmt, data = args.split(',')
+    except ValueError:
+        mgmt = args
+        data = 'bond0'
+
     socket.inet_aton(mgmt)
-    socket.inet_aton(data)
     return mgmt, data
 
 
