@@ -28,7 +28,7 @@ def _run_ansible(playbooks_dir, playbook, become=False, skip_tags=(), tags=(), *
     subprocess.check_call(cmd, cwd=playbooks_dir, stdout=sys.stdout, stderr=sys.stderr)
 
 
-def run(do_reset):
+def run(do_reset, servers_supp_ips):
     playbooks_dir = os.path.dirname(__file__)
     if do_reset:
         _run_ansible(playbooks_dir, 'reset_igz', become=True, kube_proxy_mode='iptables')
@@ -36,19 +36,17 @@ def run(do_reset):
     _run_ansible(playbooks_dir, 'offline_cache', release_cache_dir='./releases', skip_downloads=True)
     _run_ansible(playbooks_dir, 'cluster', become=True, kubectl_localhost=True,
                  kubeconfig_localhost=True, deploy_container_engine=False, skip_downloads=True,
-                 preinstall_selinux_state='disabled', kube_proxy_mode='iptables')
+                 preinstall_selinux_state='disabled', kube_proxy_mode='iptables',
+                 supplementary_addresses_in_ssl_keys=servers_supp_ips)
     _run_ansible(playbooks_dir, 'clients')
 
 
 def _k8s_node_ips(args):
-    try:
-        mgmt, data = args.split(',')
-    except ValueError:
-        mgmt = args
-        data = 'bond0'
-
+    mgmt, data, supplementary_ip = args.split(',')
     socket.inet_aton(mgmt)
-    return mgmt, data
+    socket.inet_aton(data)
+    socket.inet_aton(supplementary_ip)
+    return mgmt, data, supplementary_ip
 
 
 def _validate_ip(ip):
@@ -72,8 +70,10 @@ def main():
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=log_fmt)
 
     args = cli_parser()
-    gen_templates.from_cli(args.servers, args.clients, args.user, args.password)
-    run(args.reset)
+    servers = [(mgmt, data) for mgmt, data, _ in args.servers]
+    gen_templates.from_cli(servers, args.clients, args.user, args.password)
+    servers_supp_ips = [supp_ip for _, _, supp_ip in args.servers]
+    run(args.reset, servers_supp_ips)
 
 
 if __name__ == '__main__':
