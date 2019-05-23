@@ -19,7 +19,7 @@ nodes.any_builder_node {
         withCredentials([string(credentialsId: 'sudo_password', variable: 'sudo_password')]) {
             common.shell(['./prepare_offline_version.sh', env.sudo_password])
         }
-        return docker.build("kubespray:${env.BRANCH_NAME}")
+        return docker.build("kubespray:${env.BRANCH_NAME}", '--file igz_Dockerfile .')
     }
 
     try {
