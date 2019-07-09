@@ -25,15 +25,16 @@ def _run_ansible(playbooks_dir, playbook, become=False, skip_tags=(), tags=(), *
     if become:
         cmd.append('--become')
 
+    logging.info(cmd)
     subprocess.check_call(cmd, cwd=playbooks_dir, stdout=sys.stdout, stderr=sys.stderr)
 
 
 def run(do_reset, servers_supp_ips):
-    playbooks_dir = os.path.dirname(__file__)
+    playbooks_dir = os.path.dirname(os.path.abspath(__file__))
     if do_reset:
         _run_ansible(playbooks_dir, 'reset_igz', become=True, kube_proxy_mode='iptables')
 
-    _run_ansible(playbooks_dir, 'offline_cache', release_cache_dir='./releases', skip_downloads=True)
+    _run_ansible(playbooks_dir, 'offline_cache', become=True, release_cache_dir='./releases', skip_downloads=True)
     _run_ansible(playbooks_dir, 'cluster', become=True, kubectl_localhost=True,
                  kubeconfig_localhost=True, deploy_container_engine=False, skip_downloads=True,
                  preinstall_selinux_state='disabled', kube_proxy_mode='iptables',
