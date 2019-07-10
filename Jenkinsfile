@@ -9,7 +9,7 @@ properties([
 
 timestamps {
 common.notify_slack {
-nodes.any_builder_node {
+node('kubespray') {
     stage('git clone') {
         deleteDir()
         checkout scm
