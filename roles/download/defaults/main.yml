@@ -197,7 +197,7 @@ cilium_init_image_repo: "docker.io/library/busybox"
 cilium_init_image_tag: "1.28.4"
 kube_router_image_repo: "docker.io/cloudnativelabs/kube-router"
 kube_router_image_tag: "{{ kube_router_version }}"
-multus_image_repo: "docker.io/danykaufman/multus"
+multus_image_repo: "danykaufman/multus"
 multus_image_tag: "{{ multus_version }}"
 nginx_image_repo: nginx
 nginx_image_tag: 1.15
