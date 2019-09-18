@@ -83,7 +83,7 @@ downloads:
 
   google_coredns:
     repo: "{{ google_containers }}/coredns"
-    tag: "1.4.0"
+    tag: "1.2.2"
 
   pause:
     repo: "{{ google_containers }}/pause"
