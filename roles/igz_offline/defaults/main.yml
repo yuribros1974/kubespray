@@ -2,8 +2,8 @@
 local_release_dir: /tmp/releases
 
 google_containers: "gcr.io/google-containers"
-helm_version: "v2.11.0"
-calico_version: "v3.1.3"
+helm_version: "v2.13.1"
+calico_version: "v3.4.0"
 weave_version: "2.5.1"
 
 downloads:
@@ -13,7 +13,7 @@ downloads:
     tag: "1.4.0"
 
   cluster-proportional-autoscaler-amd64:
-    repo: "gcr.io/google_containers/cluster-proportional-autoscaler-amd64"
+    repo: "k8s.gcr.io/cluster-proportional-autoscaler-amd64"
     tag: "1.4.0"
 
   k8s-helm:
@@ -33,19 +33,19 @@ downloads:
     tag: "v3.2.26"
 
   calico-node:
-    repo: "quay.io/calico/node"
+    repo: "calico/node"
     tag: "{{ calico_version }}"
 
   calico-ctl:
-    repo: "quay.io/calico/ctl"
+    repo: "calico/ctl"
     tag: "{{ calico_version }}"
 
   calico-kube-controllers:
-    repo: "quay.io/calico/kube-controllers"
+    repo: "calico/kube-controllers"
     tag: "{{ calico_version }}"
 
   calico-cni:
-    repo: "quay.io/calico/cni"
+    repo: "calico/cni"
     tag: "{{ calico_version }}"
 
   weave_kube:
