@@ -181,5 +181,5 @@
 
 - name: set alternate flexvolume path
   set_fact:
-    kubelet_flexvolumes_plugins_dir: /var/lib/kubelet/volumeplugins
+    kubelet_flexvolumes_plugins_dir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
   when: not usr.stat.writeable

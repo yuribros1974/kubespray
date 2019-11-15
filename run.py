@@ -39,7 +39,7 @@ def run(do_reset, servers_supp_ips):
                  kubeconfig_localhost=True, deploy_container_engine=False, skip_downloads=True,
                  preinstall_selinux_state='disabled', kube_proxy_mode='iptables',
                  supplementary_addresses_in_ssl_keys=servers_supp_ips)
-    _run_ansible(playbooks_dir, 'clients')
+    _run_ansible(playbooks_dir, 'igz_post_install')
 
 
 def _k8s_node_ips(args):
