@@ -2,19 +2,19 @@
 local_release_dir: /tmp/releases
 
 google_containers: "gcr.io/google-containers"
-helm_version: "v2.13.1"
-calico_version: "v3.4.0"
-weave_version: "2.5.1"
+helm_version: "v2.14.3"
+calico_version: "v3.7.3"
+weave_version: "2.5.2"
 
 downloads:
   # from roles/donwloads/defaults
   coredns:
     repo: "coredns/coredns"
-    tag: "1.4.0"
+    tag: "1.6.0"
 
   cluster-proportional-autoscaler-amd64:
     repo: "k8s.gcr.io/cluster-proportional-autoscaler-amd64"
-    tag: "1.4.0"
+    tag: "1.6.0"
 
   k8s-helm:
     repo: "lachlanevenson/k8s-helm"
@@ -30,7 +30,7 @@ downloads:
 
   etcd:
     repo: "quay.io/coreos/etcd"
-    tag: "v3.2.26"
+    tag: "v3.3.10"
 
   calico-node:
     repo: "calico/node"
