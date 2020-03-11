@@ -84,6 +84,14 @@
     - inventory_hostname in groups['kube-node']
     - kube_network_node_prefix is defined
 
+- name: IGZ debug
+  debug:
+    msg: "IP variable is: {{ ip }}"
+
+- name: IGZ debug
+  debug:
+    msg: "{{ ansible_all_ipv4_addresses }}"
+
 - name: Stop if ip var does not match local ips
   assert:
     that: ip in ansible_all_ipv4_addresses
