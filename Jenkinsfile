@@ -1,4 +1,4 @@
-@Library('pipelinex@integ_2.8') _
+@Library('pipelinex@development') _
 
 properties([
     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '1000')),
