@@ -8,7 +8,7 @@ properties([
 
 timestamps {
 common.notify_slack {
-node('kubespray') {
+node('centos76') {
 
     stage('git clone') {
         deleteDir()
