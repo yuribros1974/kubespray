@@ -20,7 +20,7 @@ kube_users_dir: "{{ kube_config_dir }}/users"
 kube_api_anonymous_auth: true
 
 ## Change this to use another Kubernetes version, e.g. a current beta release
-kube_version: v1.18.9
+kube_version: v1.17.9
 
 # kubernetes image repo define
 kube_image_repo: "k8s.gcr.io"
@@ -322,5 +322,5 @@ persistent_volumes_enabled: false
 ## Amount of time to retain events. (default 1h0m0s)
 event_ttl_duration: "1h0m0s"
 kubelet_custom_flags:
-  - "--image-gc-low-threshold=100"
+  - "--image-gc-low-threshold=99"
   - "--image-gc-high-threshold=100"

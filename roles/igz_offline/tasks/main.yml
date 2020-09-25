@@ -20,16 +20,12 @@
 
 - name: create cache directory
   file:
-    path: "{{local_release_dir}}"
+    path: "{{ local_release_dir }}"
     state: directory
     recurse: yes
     mode: 0777
   when:
   - not skip_downloads|default(false)
-
-- name: "init images cache name"
-  set_fact:
-    container_cache_name: "docker_images.tar.xz"
 
 - name: "save containers"
   shell: "docker save {{ images_to_save }} | xz -9 > {{ local_release_dir }}/{{ container_cache_name }}"
@@ -43,8 +39,8 @@
 
 - name: copy cache
   copy:
-    src: "{{release_cache_dir}}/"
-    dest: "{{local_release_dir}}"
+    src: "{{ release_cache_dir }}/"
+    dest: "{{ local_release_dir }}"
   when:
   - skip_downloads|default(false)
 
