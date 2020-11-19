@@ -49,19 +49,19 @@ downloads:
 
   # iguazio addons - needed by the kubeadm
   kube-proxy:
-    repo: "{{ google_containers }}/kube-proxy"
+    repo: "gcr.io/kube-proxy"
     tag: "{{ kube_version }}"
 
   kube-apiserver:
-    repo: "{{ google_containers }}/kube-apiserver"
+    repo: "gcr.io/kube-apiserver"
     tag: "{{ kube_version }}"
 
   kube-controller-manager:
-    repo: "{{ google_containers }}/kube-controller-manager"
+    repo: "gcr.io/kube-controller-manager"
     tag: "{{ kube_version }}"
 
   kube-scheduler:
-    repo: "{{ google_containers }}/kube-scheduler"
+    repo: "gcr.io/kube-scheduler"
     tag: "{{ kube_version }}"
 
   google_coredns:
@@ -69,7 +69,7 @@ downloads:
     tag: "1.2.2"
 
   pause:
-    repo: "{{ google_containers }}/pause"
+    repo: "gcr.io/pause"
     tag: "3.2"
 
   # NVIDIA device plugin
