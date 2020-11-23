@@ -1,7 +1,7 @@
 ---
 local_release_dir: /tmp/releases
 container_cache_name: "docker_images.tar.xz"
-google_containers: "gcr.io/google-containers"
+google_containers: "k8s.gcr.io"
 helm_version: "v3.2.4"
 weave_version: "2.7.0"
 
@@ -16,7 +16,7 @@ downloads:
     tag: "1.15.13"
 
   cluster-proportional-autoscaler-amd64:
-    repo: "k8s.gcr.io/cluster-proportional-autoscaler-amd64"
+    repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
     tag: "1.8.1"
 
   k8s-helm:
@@ -26,6 +26,10 @@ downloads:
   kubernetes-dashboard-amd64:
     repo: "docker.io/kubernetesui/dashboard-amd64"
     tag: "v2.0.4"
+
+  metrics-scraper:
+    repo: "docker.io/kubernetesui/metrics-scraper"
+    tag: "v1.0.5"
 
   etcd:
     repo: "quay.io/coreos/etcd"
@@ -44,7 +48,7 @@ downloads:
     tag: "1.19"
 
   pause-amd64:
-    repo: "gcr.io/google_containers/pause-amd64"
+    repo: "{{ google_containers }}/pause-amd64"
     tag: "3.1"
 
   # iguazio addons - needed by the kubeadm
