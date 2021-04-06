@@ -74,7 +74,7 @@
   action:
     module: "{{ ansible_pkg_mgr }}"
     name: "{{ required_pkgs | default([]) | union(common_required_pkgs|default([])) }}"
-    state: latest
+    state: present
   register: pkgs_task_result
   until: pkgs_task_result is succeeded
   retries: 4
