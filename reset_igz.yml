@@ -17,3 +17,11 @@
   roles:
     - { role: kubespray-defaults}
     - { role: reset, tags: reset }
+
+- hosts: etcd:k8s-cluster:calico-rr
+  tasks:
+    - name: Delete weave interface
+      shell: ip link delete weave
+      args:
+        executable: /bin/bash
+      become: yes
