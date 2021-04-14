@@ -20,8 +20,17 @@
 
 - hosts: etcd:k8s-cluster:calico-rr
   tasks:
+    - name: CHeck if weave interface exists
+      shell: ip link show weave
+      args:
+        executable: /bin/bash
+      become: yes
+      ignore_errors: yes
+      register: weave_check
+
     - name: Delete weave interface
       shell: ip link delete weave
       args:
         executable: /bin/bash
       become: yes
+      when: weaver_check.rc == 0
