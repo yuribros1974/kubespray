@@ -33,4 +33,4 @@
       args:
         executable: /bin/bash
       become: yes
-      when: weaver_check.rc == 0
+      when: weave_check.rc == 0
