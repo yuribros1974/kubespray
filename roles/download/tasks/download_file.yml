@@ -12,6 +12,7 @@
     - facts
 
   - name: download_file | Create dest directory on node
+    become: yes
     file:
       path: "{{ download.dest | dirname }}"
       owner: "{{ download.owner | default(omit) }}"

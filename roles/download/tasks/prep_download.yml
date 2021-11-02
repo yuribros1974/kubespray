@@ -92,6 +92,7 @@
   when: download_container
 
 - name: prep_download | Create staging directory on remote node
+  become: yes
   file:
     path: "{{ local_release_dir }}/images"
     state: directory

@@ -19,6 +19,7 @@
   - not skip_downloads|default(false)
 
 - name: "create cache directory"
+  become: yes
   file:
     path: "{{ local_release_dir }}"
     state: directory
