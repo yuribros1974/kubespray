@@ -25,3 +25,11 @@
       setup:
         gather_subset: '!all,!min,hardware'
         filter: "ansible_*total_mb"
+
+    - name: Gather necessary facts
+      setup:
+        gather_subset: '!all,!min,hardware'
+        filter: "{{ item }}"
+      loop:
+        - ansible_distribution_major_version
+        - ansible_processor_cores

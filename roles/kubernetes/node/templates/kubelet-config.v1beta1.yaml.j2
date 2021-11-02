@@ -26,7 +26,7 @@ staticPodPath: {{ kube_manifest_dir }}
 cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
 containerLogMaxFiles: {{ kubelet_logfiles_max_nr }}
 containerLogMaxSize: {{ kubelet_logfiles_max_size }}
-maxPods: {{ kubelet_max_pods }}
+maxPods: {{ dynamic_kubelet_max_pods }}
 address: {{ kubelet_bind_address }}
 readOnlyPort: {{ kube_read_only_port }}
 healthzPort: {{ kubelet_healthz_port }}
