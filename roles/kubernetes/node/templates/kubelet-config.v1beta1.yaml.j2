@@ -24,6 +24,8 @@ enforceNodeAllocatable:
 {% endif %}
 staticPodPath: {{ kube_manifest_dir }}
 cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
+containerLogMaxFiles: {{ kubelet_logfiles_max_nr }}
+containerLogMaxSize: {{ kubelet_logfiles_max_size }}
 maxPods: {{ dynamic_kubelet_max_pods }}
 address: {{ kubelet_bind_address }}
 readOnlyPort: {{ kube_read_only_port }}
@@ -60,26 +62,26 @@ clusterDNS:
 kubeReserved:
 {% if is_kube_master|bool %}
   cpu: {{ kube_master_cpu_reserved }}
-  memory: {{ kube_master_memory_reserved|regex_replace('Mi', 'M') }}
+  memory: {{ kube_master_memory_reserved }}
 {% else %}
   cpu: {{ kube_cpu_reserved }}
-  memory: {{ kube_memory_reserved|regex_replace('Mi', 'M') }}
+  memory: {{ kube_memory_reserved }}
 {% endif %}
 {% if system_reserved is defined and system_reserved %}
 systemReserved:
 {% if is_kube_master|bool %}
-  cpu: {{ system_master_cpu_reserved|default('250m') }}
-  memory: {{ system_master_memory_reserved|default('256M')|regex_replace('Mi', 'M') }}
+  cpu: {{ system_master_cpu_reserved }}
+  memory: {{ system_master_memory_reserved }}
 {% else %}
-  cpu: {{ system_cpu_reserved|default('500m') }}
-  memory: {{ system_memory_reserved|default('512M')|regex_replace('Mi', 'M') }}
+  cpu: {{ system_cpu_reserved }}
+  memory: {{ system_memory_reserved }}
 {% endif %}
 {% endif %}
 resolvConf: "{{ kube_resolv_conf }}"
 {% if kubelet_config_extra_args %}
 {{ kubelet_config_extra_args | to_nice_yaml(indent=2) }}
 {% endif %}
-{% if inventory_hostname in groups['kube-node'] and kubelet_node_config_extra_args %}
+{% if inventory_hostname in groups['kube_node'] and kubelet_node_config_extra_args %}
 {{ kubelet_node_config_extra_args | to_nice_yaml(indent=2) }}
 {% endif %}
 {% if tls_min_version is defined %}
@@ -90,4 +92,11 @@ tlsCipherSuites:
 {% for tls in tls_cipher_suites %}
 - {{ tls }}
 {% endfor %}
+{% endif %}
+{% if kubelet_event_record_qps %}
+eventRecordQPS: {{ kubelet_event_record_qps }}
+{% endif %}
+{% if kube_version is version('v1.21.0', '>=') %}
+shutdownGracePeriod: {{ kubelet_shutdown_grace_period }}
+shutdownGracePeriodCriticalPods: {{ kubelet_shutdown_grace_period_critical_pods }}
 {% endif %}

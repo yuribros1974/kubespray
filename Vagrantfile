@@ -26,12 +26,14 @@ SUPPORTED_OS = {
   "centos-bento"        => {box: "bento/centos-7.6",           user: "vagrant"},
   "centos8"             => {box: "centos/8",                   user: "vagrant"},
   "centos8-bento"       => {box: "bento/centos-8",             user: "vagrant"},
-  "fedora31"            => {box: "fedora/31-cloud-base",       user: "vagrant"},
-  "fedora32"            => {box: "fedora/32-cloud-base",       user: "vagrant"},
-  "opensuse"            => {box: "bento/opensuse-leap-15.1",   user: "vagrant"},
+  "fedora33"            => {box: "fedora/33-cloud-base",       user: "vagrant"},
+  "fedora34"            => {box: "fedora/34-cloud-base",       user: "vagrant"},
+  "opensuse"            => {box: "bento/opensuse-leap-15.2",   user: "vagrant"},
   "opensuse-tumbleweed" => {box: "opensuse/Tumbleweed.x86_64", user: "vagrant"},
   "oraclelinux"         => {box: "generic/oracle7",            user: "vagrant"},
   "oraclelinux8"        => {box: "generic/oracle8",            user: "vagrant"},
+  "rhel7"               => {box: "generic/rhel7",              user: "vagrant"},
+  "rhel8"               => {box: "generic/rhel8",              user: "vagrant"},
 }
 
 if File.exist?(CONFIG)
@@ -47,6 +49,7 @@ $vm_cpus ||= 2
 $shared_folders ||= {}
 $forwarded_ports ||= {}
 $subnet ||= "172.18.8"
+$subnet_ipv6 ||= "fd3c:b398:0698:0756"
 $os ||= "ubuntu1804"
 $network_plugin ||= "flannel"
 # Setting multi_networking to true will install Multus: https://github.com/intel/multus-cni
@@ -83,16 +86,16 @@ $inventory = File.absolute_path($inventory, File.dirname(__FILE__))
 if ! File.exist?(File.join(File.dirname($inventory), "hosts.ini"))
   $vagrant_ansible = File.join(File.dirname(__FILE__), ".vagrant", "provisioners", "ansible")
   FileUtils.mkdir_p($vagrant_ansible) if ! File.exist?($vagrant_ansible)
-  if ! File.exist?(File.join($vagrant_ansible,"inventory"))
-    FileUtils.ln_s($inventory, File.join($vagrant_ansible,"inventory"))
-  end
+  $vagrant_inventory = File.join($vagrant_ansible,"inventory")
+  FileUtils.rm_f($vagrant_inventory)
+  FileUtils.ln_s($inventory, $vagrant_inventory)
 end
 
 if Vagrant.has_plugin?("vagrant-proxyconf")
-    $no_proxy = ENV['NO_PROXY'] || ENV['no_proxy'] || "127.0.0.1,localhost"
-    (1..$num_instances).each do |i|
-        $no_proxy += ",#{$subnet}.#{i+100}"
-    end
+  $no_proxy = ENV['NO_PROXY'] || ENV['no_proxy'] || "127.0.0.1,localhost"
+  (1..$num_instances).each do |i|
+      $no_proxy += ",#{$subnet}.#{i+100}"
+  end
 end
 
 Vagrant.configure("2") do |config|
@@ -142,6 +145,7 @@ Vagrant.configure("2") do |config|
         vb.gui = $vm_gui
         vb.linked_clone = true
         vb.customize ["modifyvm", :id, "--vram", "8"] # ubuntu defaults to 256 MB which is a waste of precious RAM
+        vb.customize ["modifyvm", :id, "--audio", "none"]
       end
 
       node.vm.provider :libvirt do |lv|
@@ -176,19 +180,39 @@ Vagrant.configure("2") do |config|
         node.vm.network "forwarded_port", guest: guest, host: host, auto_correct: true
       end
 
-      node.vm.synced_folder ".", "/vagrant", disabled: false, type: "rsync", rsync__args: ['--verbose', '--archive', '--delete', '-z'] , rsync__exclude: ['.git','venv']
-      $shared_folders.each do |src, dst|
-        node.vm.synced_folder src, dst, type: "rsync", rsync__args: ['--verbose', '--archive', '--delete', '-z']
+      if ["rhel7","rhel8"].include? $os
+        # Vagrant synced_folder rsync options cannot be used for RHEL boxes as Rsync package cannot
+        # be installed until the host is registered with a valid Red Hat support subscription
+        node.vm.synced_folder ".", "/vagrant", disabled: false
+        $shared_folders.each do |src, dst|
+          node.vm.synced_folder src, dst
+        end
+      else
+        node.vm.synced_folder ".", "/vagrant", disabled: false, type: "rsync", rsync__args: ['--verbose', '--archive', '--delete', '-z'] , rsync__exclude: ['.git','venv']
+        $shared_folders.each do |src, dst|
+          node.vm.synced_folder src, dst, type: "rsync", rsync__args: ['--verbose', '--archive', '--delete', '-z']
+        end
       end
 
       ip = "#{$subnet}.#{i+100}"
-      node.vm.network :private_network, ip: ip
+      node.vm.network :private_network, ip: ip,
+        :libvirt__guest_ipv6 => 'yes',
+        :libvirt__ipv6_address => "#{$subnet_ipv6}::#{i+100}",
+        :libvirt__ipv6_prefix => "64",
+        :libvirt__forward_mode => "none",
+        :libvirt__dhcp_enabled => false
 
       # Disable swap for each vm
       node.vm.provision "shell", inline: "swapoff -a"
 
-      # Disable firewalld on oraclelinux vms
-      if ["oraclelinux","oraclelinux8"].include? $os
+      # ubuntu1804 and ubuntu2004 have IPv6 explicitly disabled. This undoes that.
+      if ["ubuntu1804", "ubuntu2004"].include? $os
+        node.vm.provision "shell", inline: "rm -f /etc/modprobe.d/local.conf"
+        node.vm.provision "shell", inline: "sed -i '/net.ipv6.conf.all.disable_ipv6/d' /etc/sysctl.d/99-sysctl.conf /etc/sysctl.conf"
+      end
+
+      # Disable firewalld on oraclelinux/redhat vms
+      if ["oraclelinux","oraclelinux8","rhel7","rhel8"].include? $os
         node.vm.provision "shell", inline: "systemctl stop firewalld; systemctl disable firewalld"
       end
 
@@ -229,9 +253,9 @@ Vagrant.configure("2") do |config|
           #ansible.tags = ['download']
           ansible.groups = {
             "etcd" => ["#{$instance_name_prefix}-[1:#{$etcd_instances}]"],
-            "kube-master" => ["#{$instance_name_prefix}-[1:#{$kube_master_instances}]"],
-            "kube-node" => ["#{$instance_name_prefix}-[1:#{$kube_node_instances}]"],
-            "k8s-cluster:children" => ["kube-master", "kube-node"],
+            "kube_control_plane" => ["#{$instance_name_prefix}-[1:#{$kube_master_instances}]"],
+            "kube_node" => ["#{$instance_name_prefix}-[1:#{$kube_node_instances}]"],
+            "k8s_cluster:children" => ["kube_control_plane", "kube_node"],
           }
         end
       end

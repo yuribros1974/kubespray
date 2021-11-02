@@ -13,13 +13,19 @@
 - name: Check if kubelet.conf exists
   stat:
     path: "{{ kube_config_dir }}/kubelet.conf"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: kubelet_conf
 
 - name: Check if kubeadm CA cert is accessible
   stat:
     path: "{{ kube_cert_dir }}/ca.crt"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: kubeadm_ca_stat
-  delegate_to: "{{ groups['kube-master'][0] }}"
+  delegate_to: "{{ groups['kube_control_plane'][0] }}"
   run_once: true
 
 - name: Calculate kubeadm CA cert hash
@@ -30,14 +36,14 @@
   when:
     - kubeadm_ca_stat.stat is defined
     - kubeadm_ca_stat.stat.exists
-  delegate_to: "{{ groups['kube-master'][0] }}"
+  delegate_to: "{{ groups['kube_control_plane'][0] }}"
   run_once: true
   changed_when: false
 
 - name: Create kubeadm token for joining nodes with 24h expiration (default)
   command: "{{ bin_dir }}/kubeadm token create"
   register: temp_token
-  delegate_to: "{{ groups['kube-master'][0] }}"
+  delegate_to: "{{ groups['kube_control_plane'][0] }}"
   when: kubeadm_token is not defined
   changed_when: false
 
@@ -45,11 +51,6 @@
   set_fact:
     kubeadm_token: "{{ temp_token.stdout }}"
   when: kubeadm_token is not defined
-
-- name: Get the kubeadm version
-  command: "{{ bin_dir }}/kubeadm version -o short"
-  register: kubeadm_output
-  changed_when: false
 
 - name: Set kubeadm api version to v1beta2
   set_fact:
@@ -60,11 +61,12 @@
     src: "kubeadm-client.conf.{{ kubeadmConfig_api_version }}.j2"
     dest: "{{ kube_config_dir }}/kubeadm-client.conf"
     backup: yes
+    mode: 0640
   when: not is_kube_master
 
 - name: Join to cluster if needed
   environment:
-    PATH: "{{ bin_dir }}:{{ ansible_env.PATH }}:/sbin"  # Make sure we can workaround RH / CentOS conservative path management
+    PATH: "{{ bin_dir }}:{{ ansible_env.PATH }}:/sbin"
   when: not is_kube_master and (not kubelet_conf.stat.exists)
   block:
 
@@ -117,13 +119,12 @@
   args:
     executable: /bin/bash
   run_once: true
-  delegate_to: "{{ groups['kube-master']|first }}"
+  delegate_to: "{{ groups['kube_control_plane']|first }}"
   delegate_facts: false
   when:
-    - inventory_hostname in groups['kube-master']
     - kubeadm_config_api_fqdn is not defined
     - kubeadm_discovery_address != kube_apiserver_endpoint | replace("https://", "")
-    - not kube_proxy_remove
+    - kube_proxy_deployed
     - loadbalancer_apiserver_localhost
   tags:
     - kube-proxy
@@ -138,37 +139,12 @@
 - name: Restart all kube-proxy pods to ensure that they load the new configmap
   command: "{{ bin_dir }}/kubectl --kubeconfig {{ kube_config_dir }}/admin.conf delete pod -n kube-system -l k8s-app=kube-proxy --force --grace-period=0"
   run_once: true
-  delegate_to: "{{ groups['kube-master']|first }}"
+  delegate_to: "{{ groups['kube_control_plane']|first }}"
   delegate_facts: false
   when:
-    - inventory_hostname in groups['kube-master']
     - kubeadm_config_api_fqdn is not defined
     - kubeadm_discovery_address != kube_apiserver_endpoint | replace("https://", "")
-    - not kube_proxy_remove
-  tags:
-    - kube-proxy
-
-# FIXME(mattymo): Reconcile kubelet kubeconfig filename for both deploy modes
-- name: Symlink kubelet kubeconfig for calico/canal
-  file:
-    src: "{{ kube_config_dir }}/kubelet.conf"
-    dest: "{{ kube_config_dir }}/node-kubeconfig.yaml"
-    state: link
-    force: yes
-  when:
-    - kube_network_plugin in ['calico','canal']
-    - calico_version is version('v3.3.0', '<')
-
-# FIXME(jjo): need to post-remove kube-proxy until https://github.com/kubernetes/kubeadm/issues/776
-# is fixed
-- name: Delete kube-proxy daemonset if kube_proxy_remove set, e.g. kube_network_plugin providing proxy services
-  command: "{{ bin_dir }}/kubectl --kubeconfig /etc/kubernetes/admin.conf delete daemonset -n kube-system kube-proxy"
-  run_once: true
-  delegate_to: "{{ groups['kube-master']|first }}"
-  when:
-    - kube_proxy_remove
-  # When scaling/adding nodes in the existing k8s cluster, kube-proxy wouldn't be created, as `kubeadm init` wouldn't run.
-  ignore_errors: true
+    - kube_proxy_deployed
   tags:
     - kube-proxy
 
@@ -176,7 +152,6 @@
   include_tasks: kubeadm_etcd_node.yml
   when:
     - etcd_kubeadm_enabled
-    - kubeadm_control_plane
-    - inventory_hostname not in groups['kube-master']
+    - inventory_hostname not in groups['kube_control_plane']
     - kube_network_plugin in ["calico", "flannel", "canal", "cilium"] or cilium_deploy_additionally | default(false) | bool
     - kube_network_plugin != "calico" or calico_datastore == "etcd"

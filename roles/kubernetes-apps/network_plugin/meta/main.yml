@@ -1,10 +1,5 @@
 ---
 dependencies:
-  - role: kubernetes-apps/network_plugin/cilium
-    when: kube_network_plugin == 'cilium' or cilium_deploy_additionally | default(false) | bool
-    tags:
-      - cilium
-
   - role: kubernetes-apps/network_plugin/calico
     when: kube_network_plugin == 'calico'
     tags:
@@ -19,11 +14,6 @@ dependencies:
     when: kube_network_plugin == 'flannel'
     tags:
       - flannel
-
-  - role: kubernetes-apps/network_plugin/contiv
-    when: kube_network_plugin == 'contiv'
-    tags:
-      - contiv
 
   - role: kubernetes-apps/network_plugin/kube-ovn
     when: kube_network_plugin == 'kube-ovn'
