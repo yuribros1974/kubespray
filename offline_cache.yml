@@ -6,7 +6,7 @@
   tags: always
   import_playbook: facts.yml
 
-- hosts: k8s_cluster:etcd:calico_rr
+- hosts: k8s_cluster:etcd
   gather_facts: yes
   roles:
     - { role: kubespray-defaults}
