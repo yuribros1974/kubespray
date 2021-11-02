@@ -1,4 +1,4 @@
-- hosts: etcd:k8s-cluster:calico-rr
+- hosts: etcd:k8s_cluster:calico_rr
   pre_tasks:
     - name: Remove invalid DNS records from /etc/hosts
       lineinfile:

@@ -30,7 +30,7 @@ class ServerHost(object):
     @classmethod
     def from_naipi(cls, config):
         roles = config['roles']
-        if 'kube-node' not in roles:
+        if 'kube_node' not in roles:
             return None
 
         mgmt_ip = config['address']
@@ -39,7 +39,7 @@ class ServerHost(object):
         data_interface = config.get('dataplane-interface', 'bond0')
 
         return cls(mgmt_ip, user, password, data_interface,
-                   has_etcd='kube-etcd' in roles, is_master='kube-master' in roles)
+                   has_etcd='kube-etcd' in roles, is_master='kube_master' in roles)
 
 
 def _gen_templates(path, **kwargs):

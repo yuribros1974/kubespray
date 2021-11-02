@@ -4,7 +4,7 @@
   register: ds_list
   ignore_errors: yes
   run_once: yes
-  when: inventory_hostname in groups['kube-master']
+  when: inventory_hostname in groups['kube_master']
   tags:
     - network
 

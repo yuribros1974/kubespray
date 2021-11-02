@@ -1,5 +1,5 @@
 ---
-- hosts: kube-master
+- hosts: kube_master
   tasks:
     - name: Create external_admin.conf
       shell: sed 's#server:.*#server:\ https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:6443#g' /etc/kubernetes/admin.conf  > /etc/kubernetes/external_admin.conf
@@ -11,7 +11,7 @@
         state: restarted
       become: yes
 
-- hosts: k8s-clients:k8s-cluster
+- hosts: k8s_clients:k8s_cluster
   tasks:
     - name: "create .kube directory"
       file:
