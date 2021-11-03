@@ -39,7 +39,7 @@ class ServerHost(object):
         data_interface = config.get('dataplane-interface', 'bond0')
 
         return cls(mgmt_ip, user, password, data_interface,
-                   has_etcd='kube-etcd' in roles, is_master='kube_master' in roles)
+                   has_etcd='kube-etcd' in roles, is_master='kube_control_plane' in roles)
 
 
 def _gen_templates(path, **kwargs):
