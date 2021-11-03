@@ -5,9 +5,9 @@ ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 [all]
 {% for server in servers %}
 {% if server.has_etcd %}
-k8s_node{{ loop.index }} ansible_host={{ server.mgmt_ip }} user={{ server.user }} ansible_user={{ server.user }} ansible_ssh_pass={{ server.password }} ansible_become_password={{ server.password }} ip={{ server.data_ip }} etcd_member_name=etcd{{ loop.index }}
+k8s-node{{ loop.index }} ansible_host={{ server.mgmt_ip }} user={{ server.user }} ansible_user={{ server.user }} ansible_ssh_pass={{ server.password }} ansible_become_password={{ server.password }} ip={{ server.data_ip }} etcd_member_name=etcd{{ loop.index }}
 {% else %}
-k8s_node{{ loop.index }} ansible_host={{ server.mgmt_ip }} user={{ server.user }} ansible_user={{ server.user }} ansible_ssh_pass={{ server.password }} ansible_become_password={{ server.password }} ip={{ server.data_ip }}
+k8s-node{{ loop.index }} ansible_host={{ server.mgmt_ip }} user={{ server.user }} ansible_user={{ server.user }} ansible_ssh_pass={{ server.password }} ansible_become_password={{ server.password }} ip={{ server.data_ip }}
 {% endif %}
 {% endfor %}
 
@@ -17,24 +17,24 @@ k8s_node{{ loop.index }} ansible_host={{ server.mgmt_ip }} user={{ server.user }
 [kube_control_plane]
 {% for server in servers %}
 {% if server.is_master %}
-k8s_node{{ loop.index }}
+k8s-node{{ loop.index }}
 {% endif %}
 {% endfor %}
 
 [etcd]
 {% for server in servers %}
 {% if server.has_etcd %}
-k8s_node{{ loop.index }}
+k8s-node{{ loop.index }}
 {% endif %}
 {% endfor %}
 
 [kube_node]
 {% for server in servers %}
-k8s_node{{ loop.index }}
+k8s-node{{ loop.index }}
 {% endfor %}
 
 [k8s_cluster:children]
-kube_master
+kube_control_plane
 kube_node
 
 [k8s_clients]
