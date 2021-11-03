@@ -14,7 +14,7 @@ k8s_node{{ loop.index }} ansible_host={{ server.mgmt_ip }} user={{ server.user }
 # ## configure a bastion host if your nodes are not directly reachable
 # bastion ansible_host=x.x.x.x ansible_user=some_user
 
-[kube_master]
+[kube_control_plane]
 {% for server in servers %}
 {% if server.is_master %}
 k8s_node{{ loop.index }}
