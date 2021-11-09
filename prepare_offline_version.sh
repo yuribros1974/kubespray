@@ -17,7 +17,7 @@ pipenv --python 3.6 install -r requirements.txt
 #pipenv --python 2.7.5 install -r requirements.txt
 
 export ANSIBLE_HOST_KEY_CHECKING=False && \
-  pipenv run ansible-playbook  --become -i inventory/local/hosts.ini offline_cache.yml \
+  pipenv run ansible-playbook  --become --become-user=root -i inventory/local/hosts.ini offline_cache.yml \
     -e 'local_release_dir=./releases' -e '{ download_container: False }' \
     -e '{ skip_downloads: False }' -e ansible_os_family=RedHat
 
