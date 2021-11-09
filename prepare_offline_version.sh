@@ -4,7 +4,8 @@ set -ex
 
 password=${1}
 
-
+ls -ltrh
+pwd
 cp -rp inventory/local/hosts.ini kubespray/inventory/local/hosts.ini
 
 
