@@ -5,19 +5,21 @@ set -ex
 password=${1}
 git submodule update --init --recursive
 
-cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
-cp -rp offline_cache.yml  kubespray/
-cp -rp ansible.cfg kubespray/
+#cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
+#cp -rp offline_cache.yml  kubespray/
+#cp -rp ansible.cfg kubespray/
 #cp -rp inventory/igz kubespray/inventory/
 #cd kubespray
 
+mv kubespray/* .
+mv igz-install/* .
+
 
 pipenv --python 2.7.5 install -r requirements.txt
-
-cd kubespray
 
 export ANSIBLE_HOST_KEY_CHECKING=False && \
   pipenv run ansible-playbook -i inventory/local/hosts.ini offline_cache.yml \
     -e 'local_release_dir=./releases' -e '{ download_container: False }' \
     -e '{ skip_downloads: False }' -e ansible_os_family=RedHat 
-cd ../
+
+
