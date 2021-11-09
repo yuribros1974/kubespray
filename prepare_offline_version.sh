@@ -12,7 +12,8 @@ ls -ltrh
 pwd
 
 cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
-cp -rp  inventory/igz kubespray/inventory/
+#cp -rp inventory/igz kubespray/inventory/
+
 cd kubespray
 
 pipenv --python 2.7.5 install -r requirements.txt
