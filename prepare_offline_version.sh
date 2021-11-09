@@ -7,6 +7,10 @@ ls -ltrh
 mv kubespray/* .
 cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
+hostname -I
+
+whoami
+
 
 password=${1}
 
