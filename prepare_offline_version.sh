@@ -7,7 +7,7 @@ ls -ltrh
 mv kubespray/* .
 cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
-
+echo "debiug"
 
 password=${1}
 
