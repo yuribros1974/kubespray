@@ -1,4 +1,4 @@
-root = true
+oot = true
 
 [*.{yaml,yml,yml.j2,yaml.j2}]
 indent_style = space
