@@ -20,7 +20,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False && \
     -e 'local_release_dir=./releases' -e '{ download_container: False }' \
     -e '{ skip_downloads: False }' -e ansible_os_family=RedHat
 
-#
+
 #password=${1}
 #
 #mkdir -p "${WORKSPACE}/releases"
