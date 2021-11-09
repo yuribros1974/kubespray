@@ -18,6 +18,8 @@ cp -rp  igz-install/* .
 
 pipenv --python 2.7.5 install -r requirements.txt
 
+cat inventory/local/hosts.ini
+
 export ANSIBLE_HOST_KEY_CHECKING=False && \
   pipenv run ansible-playbook -i inventory/local/hosts.ini offline_cache.yml \
     -e 'local_release_dir=./releases' -e '{ download_container: False }' \
