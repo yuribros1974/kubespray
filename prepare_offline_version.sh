@@ -6,15 +6,9 @@ password=${1}
 git submodule update --init --recursive
 
 cd kubespray
-ls -ltrh
-cd ../
-ls -ltrh
-pwd
-
 cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
 #cp -rp inventory/igz kubespray/inventory/
-
-cd kubespray
+#cd kubespray
 
 pipenv --python 2.7.5 install -r requirements.txt
 export ANSIBLE_HOST_KEY_CHECKING=False && \
