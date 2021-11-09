@@ -9,6 +9,9 @@ ls -ltrh
 cd ../
 ls -ltrh
 pwd
+
+sleep 900
+
 cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
 cp -rp  inventory/igz kubespray/inventory/
 cd kubespray
