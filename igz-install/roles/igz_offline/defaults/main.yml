@@ -1,0 +1,86 @@
+---
+local_release_dir: /tmp/releases
+container_cache_name: "docker_images.tar.xz"
+google_containers: "k8s.gcr.io"
+helm_version: "v3.2.4"
+weave_version: "2.7.0"
+
+downloads:
+  # from roles/donwloads/defaults
+  coredns:
+    repo: "coredns/coredns"
+    tag: "1.6.7"
+
+  k8s-dns-node-cache:
+    repo: "{{ google_containers }}/k8s-dns-node-cache"
+    tag: "1.15.13"
+
+  cluster-proportional-autoscaler-amd64:
+    repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
+    tag: "1.8.1"
+
+  k8s-helm:
+    repo: "lachlanevenson/k8s-helm"
+    tag: "{{ helm_version }}"
+
+  metrics-scraper:
+    repo: "docker.io/kubernetesui/metrics-scraper"
+    tag: "v1.0.5"
+
+  etcd:
+    repo: "quay.io/coreos/etcd"
+    tag: "v3.4.3"
+
+  flannel:
+    repo: "{{ flannel_image_repo }}"
+    tag: "{{ flannel_image_tag }}"
+
+  calico_node:
+    repo: "{{ calico_node_image_repo }}"
+    tag: "{{ calico_node_image_tag }}"
+
+  calico_cni:
+    repo: "{{ calico_cni_image_repo }}"
+    tag: "{{ calico_cni_image_tag }}"
+
+  calico_policy:
+    repo: "{{ calico_policy_image_repo }}"
+    tag: "{{ calico_policy_image_tag }}"
+
+  nginx:
+    repo: "nginx"
+    tag: "1.19"
+
+  pause-amd64:
+    repo: "{{ google_containers }}/pause-amd64"
+    tag: "3.1"
+
+  # iguazio addons - needed by the kubeadm
+  kube-proxy:
+    repo: "{{ google_containers }}/kube-proxy"
+    tag: "{{ kube_version }}"
+
+  kube-apiserver:
+    repo: "{{ google_containers }}/kube-apiserver"
+    tag: "{{ kube_version }}"
+
+  kube-controller-manager:
+    repo: "{{ google_containers }}/kube-controller-manager"
+    tag: "{{ kube_version }}"
+
+  kube-scheduler:
+    repo: "{{ google_containers }}/kube-scheduler"
+    tag: "{{ kube_version }}"
+
+  google_coredns:
+    repo: "{{ google_containers }}/coredns"
+    tag: "1.2.2"
+
+  pause:
+    repo: "{{ google_containers }}/pause"
+    tag: "3.2"
+
+  # NVIDIA device plugin
+  k8s-device-plugin:
+    repo: "nvidia/k8s-device-plugin"
+    tag: "v0.7.0"
