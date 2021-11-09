@@ -7,6 +7,7 @@ git submodule update --init --recursive
 
 cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
 cp -rp offline_cache.yml  kubespray/
+cp -rp ansible.cfg kubespray/
 #cp -rp inventory/igz kubespray/inventory/
 #cd kubespray
 
