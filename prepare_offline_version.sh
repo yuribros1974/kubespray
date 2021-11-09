@@ -17,6 +17,14 @@ password=${1}
 pipenv --python 3.6 install -r requirements.txt
 #pipenv --python 2.7.5 install -r requirements.txt
 
+
+export ANSIBLE_HOST_KEY_CHECKING=False && \
+  pipenv run ansible localhost -m command -a "which unzip"
+
+
+
+
+
 export ANSIBLE_HOST_KEY_CHECKING=False && \
   pipenv run ansible-playbook  --become --become-user=root -i inventory/local/hosts.ini offline_cache.yml \
     -e 'local_release_dir=./releases' -e '{ download_container: False }' \
