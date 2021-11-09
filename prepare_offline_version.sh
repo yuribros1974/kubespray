@@ -7,10 +7,9 @@ ls -ltrh
 mv kubespray/* .
 cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
-hostname -I
 
-whoami
-ls -ltrh inventory/local/
+sudo yum install unzip  -y
+
 password=${1}
 
 pipenv --python 2.7.5 install -r requirements.txt
