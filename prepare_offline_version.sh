@@ -2,7 +2,8 @@
 
 set -ex
 git submodule update --init --recursive
-
+pwd
+ls -ltrh
 mv kubespray/* .
 cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
