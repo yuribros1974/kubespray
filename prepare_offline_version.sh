@@ -3,6 +3,7 @@
 set -ex
 
 password=${1}
+cat inventory/local/hosts.ini
 
 pipenv --python 2.7.5 install -r requirements.txt
 export ANSIBLE_HOST_KEY_CHECKING=False && \
