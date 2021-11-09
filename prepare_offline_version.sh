@@ -19,7 +19,7 @@ pipenv --python 3.6 install -r requirements.txt
 
 
 export ANSIBLE_HOST_KEY_CHECKING=False && \
-  pipenv run ansible localhost -m command -a "which gtar"
+  pipenv run ansible --become --become-user=root localhost -m command -a "which gtar"
 
 
 
