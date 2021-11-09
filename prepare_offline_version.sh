@@ -9,6 +9,7 @@ cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
 echo "debug"
 
+
 password=${1}
 
 pipenv --python 3.6 install -r requirements.txt
