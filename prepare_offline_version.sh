@@ -11,9 +11,6 @@ cat inventory/local/hosts.ini
 password=${1}
 
 
-mkdir -p releases
-
-chmod 777 releases
 
 pipenv --python 2.7.5 install -r requirements.txt
 export ANSIBLE_HOST_KEY_CHECKING=False && \
