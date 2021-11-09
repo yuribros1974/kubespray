@@ -8,7 +8,6 @@ mv kubespray/* .
 cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
 
-sudo yum install unzip  -y
 
 password=${1}
 
