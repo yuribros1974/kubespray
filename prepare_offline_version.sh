@@ -13,6 +13,7 @@ echo "debug"
 
 password=${1}
 
+
 pipenv --python 3.6 install -r requirements.txt
 #pipenv --python 2.7.5 install -r requirements.txt
 
