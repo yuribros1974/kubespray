@@ -5,8 +5,7 @@ set -ex
 password=${1}
 git submodule update --init --recursive
 
-cd kubespray
-cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
+#cp -rp inventory/local/hosts.ini  kubespray/inventory/local/hosts.ini
 #cp -rp inventory/igz kubespray/inventory/
 #cd kubespray
 
