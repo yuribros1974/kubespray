@@ -12,7 +12,7 @@ git submodule update --init --recursive
 #cd kubespray
 
 mv kubespray/* .
-mv igz-install/* .
+cp -rp  igz-install/* .
 
 
 pipenv --python 2.7.5 install -r requirements.txt
