@@ -3,6 +3,7 @@
 set -ex
 
 password=${1}
+git submodule update --init --recursive
 
 cd kubespray
 ls -ltrh
