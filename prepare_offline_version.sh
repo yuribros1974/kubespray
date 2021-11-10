@@ -20,7 +20,8 @@ pipenv --python 3.6 install -r requirements.txt
 export ANSIBLE_HOST_KEY_CHECKING=False && \
   pipenv run ansible --become --become-user=root localhost -m debug -a "var=ansible_env.PATH"
 
-
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 
 export ANSIBLE_HOST_KEY_CHECKING=False && \
