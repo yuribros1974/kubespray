@@ -22,6 +22,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False && \
 
 
 
+
 export ANSIBLE_HOST_KEY_CHECKING=False && \
   pipenv run ansible-playbook  --become --become-user=root -i inventory/local/hosts.ini offline_cache.yml \
     -e 'local_release_dir=./releases' -e '{ download_container: False }' \
