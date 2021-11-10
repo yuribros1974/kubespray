@@ -9,7 +9,6 @@ cp -rp  igz-install/* .
 cat inventory/local/hosts.ini
 echo "debug"
 
-
 password=${1}
 
 
