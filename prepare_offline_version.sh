@@ -31,6 +31,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False && \
     -e '{ skip_downloads: False }' -e ansible_os_family=RedHat
 
 
+
 #password=${1}
 #
 #mkdir -p "${WORKSPACE}/releases"
