@@ -28,7 +28,7 @@ export LANG=en_US.UTF-8
 
 export ANSIBLE_HOST_KEY_CHECKING=False && \
   pipenv run ansible-playbook  --become --become-user=root -i inventory/local/hosts.ini offline_cache.yml \
-    -e 'local_release_dir=./releases' -e '{ download_container: False }' \
+    -e 'local_release_dir=${WORKSPACE}/releases' -e '{ download_container: False }' \
     -e '{ skip_downloads: False }' -e ansible_os_family=RedHat
 
 
