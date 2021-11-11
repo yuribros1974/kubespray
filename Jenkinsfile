@@ -50,6 +50,10 @@ node('runners') {
     stage('upload to s3') {
         def bucket = 'iguazio-versions'
         def bucket_region = 'us-east-1'
+        sh"""
+        export LC_ALL=en_US.UTF-8
+        export LANG=en_US.UTF-8
+        """
         common.upload_to_s3(bucket, bucket_region, nas_image, "${rel_dir}/${output_name}")
     }
 }}}
