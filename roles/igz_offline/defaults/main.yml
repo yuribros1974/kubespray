@@ -29,7 +29,7 @@ downloads:
 
   etcd:
     repo: "quay.io/coreos/etcd"
-    tag: "v3.4.3"
+    tag: "v3.4.13"
 
   flannel:
     repo: "{{ flannel_image_repo }}"
