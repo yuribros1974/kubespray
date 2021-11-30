@@ -2,22 +2,22 @@
 local_release_dir: /tmp/releases
 container_cache_name: "docker_images.tar.xz"
 google_containers: "k8s.gcr.io"
-helm_version: "v3.2.4"
-weave_version: "2.7.0"
+helm_version: "v3.6.3"
+weave_version: "2.8.1"
 
 downloads:
   # from roles/donwloads/defaults
   coredns:
     repo: "coredns/coredns"
-    tag: "1.6.7"
+    tag: "v1.8.0"
 
   k8s-dns-node-cache:
     repo: "{{ google_containers }}/k8s-dns-node-cache"
-    tag: "1.15.13"
+    tag: "1.17.1"
 
   cluster-proportional-autoscaler-amd64:
     repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
-    tag: "1.8.1"
+    tag: "1.8.3"
 
   k8s-helm:
     repo: "lachlanevenson/k8s-helm"
@@ -25,11 +25,11 @@ downloads:
 
   metrics-scraper:
     repo: "docker.io/kubernetesui/metrics-scraper"
-    tag: "v1.0.5"
+    tag: "v1.0.6"
 
   etcd:
     repo: "quay.io/coreos/etcd"
-    tag: "v3.4.3"
+    tag: "v3.4.13"
 
   flannel:
     repo: "{{ flannel_image_repo }}"
