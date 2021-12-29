@@ -12,11 +12,11 @@ downloads:
     tag: "v1.8.0"
 
   k8s-dns-node-cache:
-    repo: "{{ google_containers }}/k8s-dns-node-cache"
+    repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
     tag: "1.17.1"
 
   cluster-proportional-autoscaler-amd64:
-    repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
+    repo: "{{ google_containers }}/cpa/cluster-proportional-autoscaler-amd64"
     tag: "1.8.3"
 
   k8s-helm:
