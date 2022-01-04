@@ -21,5 +21,5 @@ etcd:
 {% endif %}
 dns:
   type: CoreDNS
-  imageRepository: {{ coredns_image_repo | regex_replace('/coredns.*$','') }}
-  imageTag: {{ coredns_image_tag }}
+  imageRepository: k8s.gcr.io/coredns/coredns
+  imageTag: v1.8.0

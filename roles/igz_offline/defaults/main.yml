@@ -72,10 +72,6 @@ downloads:
     repo: "{{ google_containers }}/kube-scheduler"
     tag: "{{ kube_version }}"
 
-  google_coredns:
-    repo: "{{ google_containers }}/coredns"
-    tag: "1.2.2"
-
   pause:
     repo: "{{ google_containers }}/pause"
     tag: "3.2"
