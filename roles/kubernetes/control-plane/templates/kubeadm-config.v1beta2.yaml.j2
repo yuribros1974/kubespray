@@ -84,7 +84,7 @@ etcd:
 {% endif %}
 dns:
   type: CoreDNS
-  imageRepository: k8s.gcr.io/coredns/coredns
+  imageRepository: k8s.gcr.io/coredns
   imageTag: v1.8.0
 networking:
   dnsDomain: {{ dns_domain }}
