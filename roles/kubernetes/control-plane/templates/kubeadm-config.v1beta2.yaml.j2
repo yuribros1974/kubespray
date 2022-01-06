@@ -84,8 +84,8 @@ etcd:
 {% endif %}
 dns:
   type: CoreDNS
-  imageRepository: k8s.gcr.io/coredns
-  imageTag: v1.8.0
+  imageRepository: {{ coredns_image_repo | regex_replace('/coredns.*$','/coredns') }}
+  imageTag: {{ coredns_image_tag }}
 networking:
   dnsDomain: {{ dns_domain }}
   serviceSubnet: "{{ kube_service_addresses }}{{ ',' + kube_service_addresses_ipv6 if enable_dual_stack_networks else '' }}"
