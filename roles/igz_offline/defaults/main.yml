@@ -13,6 +13,7 @@ downloads:
 
   k8s-dns-node-cache:
 <<<<<<< HEAD
+<<<<<<< HEAD
     repo: "{{ google_containers }}/k8s-dns-node-cache"
     tag: "1.15.13"
 
@@ -24,6 +25,12 @@ downloads:
     tag: "1.17.1"
 
   cluster-proportional-autoscaler-amd64:
+=======
+    repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
+    tag: "1.17.1"
+
+  cluster-proportional-autoscaler-amd64:
+>>>>>>> bb57b481 (IG-19957 updating url's of packages to fix the kubespray release pipeline)
     repo: "{{ google_containers }}/cpa/cluster-proportional-autoscaler-amd64"
     tag: "1.8.3"
 >>>>>>> bb57b481 (IG-19957 updating url's of packages to fix the kubespray release pipeline)
