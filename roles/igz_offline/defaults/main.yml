@@ -12,12 +12,21 @@ downloads:
     tag: "1.6.7"
 
   k8s-dns-node-cache:
+<<<<<<< HEAD
     repo: "{{ google_containers }}/k8s-dns-node-cache"
     tag: "1.15.13"
 
   cluster-proportional-autoscaler-amd64:
     repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
     tag: "1.8.1"
+=======
+    repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
+    tag: "1.17.1"
+
+  cluster-proportional-autoscaler-amd64:
+    repo: "{{ google_containers }}/cpa/cluster-proportional-autoscaler-amd64"
+    tag: "1.8.3"
+>>>>>>> bb57b481 (IG-19957 updating url's of packages to fix the kubespray release pipeline)
 
   k8s-helm:
     repo: "lachlanevenson/k8s-helm"
@@ -78,7 +87,7 @@ downloads:
 
   pause:
     repo: "{{ google_containers }}/pause"
-    tag: "3.2"
+    tag: "3.3"
 
   # NVIDIA device plugin
   k8s-device-plugin:
