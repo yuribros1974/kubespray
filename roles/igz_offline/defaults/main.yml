@@ -8,32 +8,17 @@ weave_version: "2.7.0"
 downloads:
   # from roles/donwloads/defaults
   coredns:
-    repo: "coredns/coredns"
-    tag: "1.6.7"
+    repo: "{{ google_containers }}/coredns/coredns"
+    tag: "v1.8.0"
+
 
   k8s-dns-node-cache:
-<<<<<<< HEAD
-<<<<<<< HEAD
-    repo: "{{ google_containers }}/k8s-dns-node-cache"
-    tag: "1.15.13"
-
-  cluster-proportional-autoscaler-amd64:
-    repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
-    tag: "1.8.1"
-=======
     repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
     tag: "1.17.1"
 
   cluster-proportional-autoscaler-amd64:
-=======
-    repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
-    tag: "1.17.1"
-
-  cluster-proportional-autoscaler-amd64:
->>>>>>> bb57b481 (IG-19957 updating url's of packages to fix the kubespray release pipeline)
     repo: "{{ google_containers }}/cpa/cluster-proportional-autoscaler-amd64"
     tag: "1.8.3"
->>>>>>> bb57b481 (IG-19957 updating url's of packages to fix the kubespray release pipeline)
 
   k8s-helm:
     repo: "lachlanevenson/k8s-helm"
@@ -87,10 +72,6 @@ downloads:
   kube-scheduler:
     repo: "{{ google_containers }}/kube-scheduler"
     tag: "{{ kube_version }}"
-
-  google_coredns:
-    repo: "{{ google_containers }}/coredns"
-    tag: "1.2.2"
 
   pause:
     repo: "{{ google_containers }}/pause"
