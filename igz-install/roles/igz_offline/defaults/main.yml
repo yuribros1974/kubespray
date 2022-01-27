@@ -8,11 +8,12 @@ weave_version: "2.8.1"
 downloads:
   # from roles/donwloads/defaults
   coredns:
-    repo: "coredns/coredns"
+    repo: "{{ google_containers }}/coredns/coredns"
     tag: "v1.8.0"
 
+
   k8s-dns-node-cache:
-    repo: "{{ google_containers }}/k8s-dns-node-cache"
+    repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
     tag: "1.21.1"
 
   cluster-proportional-autoscaler-amd64:
