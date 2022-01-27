@@ -16,7 +16,7 @@ downloads:
     tag: "1.21.1"
 
   cluster-proportional-autoscaler-amd64:
-    repo: "{{ google_containers }}/cluster-proportional-autoscaler-amd64"
+    repo: "{{ google_containers }}/cpa/cluster-proportional-autoscaler-amd64"
     tag: "1.8.5"
 
   k8s-helm:
