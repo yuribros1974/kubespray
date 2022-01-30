@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 set -ex
-git submodule update --init --recursive
+git submodule update --force --recursive --init --remote
+
 pwd
 ls -ltrh
 mv kubespray/* .
