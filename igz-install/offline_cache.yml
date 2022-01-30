@@ -1,6 +1,6 @@
 ---
 - name: Check ansible version
-  import_playbook: inventory/ansible_version.yml
+  import_playbook: ansible_version.yml
 
 - name: Gather facts
   tags: always
