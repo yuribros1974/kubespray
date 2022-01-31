@@ -16,7 +16,7 @@ properties(props)
 
 timestamps {
 common.notify_slack {
-node('runners') {
+node('centos76') {
 
     stage('git clone') {
         deleteDir()
