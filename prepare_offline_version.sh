@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -ex
-git submodule update --force --recursive --init --remote
+git submodule update --force --recursive --init
 
 pwd
 ls -ltrh
