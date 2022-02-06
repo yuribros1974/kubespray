@@ -1,4 +1,4 @@
-@Library('pipelinex@development') _
+@Library('pipelinex@_s3_python3') _
 
 def config = common.get_config()
 
