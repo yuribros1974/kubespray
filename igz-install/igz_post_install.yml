@@ -23,6 +23,7 @@
         src: "{{ inventory_dir }}/artifacts/admin.conf"
         dest: "/home/{{ ansible_user }}/.kube/config"
         owner: "{{ ansible_user }}"
+        mode: 0400
 
     - name: Copy kubectl binary to client
       copy:
