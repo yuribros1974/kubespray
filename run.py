@@ -41,7 +41,7 @@ def run(do_reset, skip_k8s_install, servers_supp_ips):
                      supplementary_addresses_in_ssl_keys=servers_supp_ips,
                      calico_datastore="etcd",
                      flanneld_iface="eth1")
-        _run_ansible(playbooks_dir, 'igz_post_install'
+        _run_ansible(playbooks_dir, 'igz_post_install')
 
 
 def _k8s_node_ips(args):
