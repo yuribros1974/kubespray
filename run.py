@@ -40,7 +40,7 @@ def run(do_reset, skip_k8s_install, servers_supp_ips):
                      preinstall_selinux_state='disabled', kube_proxy_mode='iptables',
                      supplementary_addresses_in_ssl_keys=servers_supp_ips,
                      calico_datastore="etcd",
-                     flanneld_iface="eth1")
+                     canal_iface="eth1")
         _run_ansible(playbooks_dir, 'igz_post_install')
 
 
