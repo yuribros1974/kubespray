@@ -29,7 +29,7 @@ def _run_ansible(playbooks_dir, playbook, become=False, skip_tags=(), tags=(), *
     subprocess.check_call(cmd, cwd=playbooks_dir, stdout=sys.stdout, stderr=sys.stderr)
 
 
-def run(do_reset, skip_k8s_install, servers_supp_ips):
+def run(do_reset, skip_k8s_install, servers_supp_ips, canal_iface):
     playbooks_dir = os.path.dirname(os.path.abspath(__file__))
     if do_reset:
         _run_ansible(playbooks_dir, 'reset_igz', become=True, kube_proxy_mode='iptables')
@@ -40,7 +40,7 @@ def run(do_reset, skip_k8s_install, servers_supp_ips):
                      preinstall_selinux_state='disabled', kube_proxy_mode='iptables',
                      supplementary_addresses_in_ssl_keys=servers_supp_ips,
                      calico_datastore="etcd",
-                     canal_iface="eth1")
+                     canal_iface=canal_iface)
         _run_ansible(playbooks_dir, 'igz_post_install')
 
 
@@ -64,6 +64,8 @@ def cli_parser():
     parser.add_argument('-s', '--server', dest='servers', type=_k8s_node_ips, action='append', default=[])
     parser.add_argument('-c', '--client', dest='clients', type=_validate_ip, action='append', default=[])
     parser.add_argument('-a', '--apiserver_vip', dest='apiserver_vip', type=json.loads, default=[])
+    parser.add_argument('-n', '--canal-iface', dest='canal_iface', default='eth0',
+                        help='Interface name for canal to use')
     parser.add_argument('-r', '--reset', action='store_true',
                         help='do reset before deploy, delete restart docker, dont run from within k8s cluster')
     parser.add_argument('-k', '--skip-k8s-install', action='store_true',
@@ -81,7 +83,8 @@ def main():
     servers_supp_ips = [supp_ip for _, _, supp_ip in args.servers]
     if args.apiserver_vip and 'ip_address' in args.apiserver_vip:
         servers_supp_ips.append(args.apiserver_vip['ip_address'])
-    run(args.reset, args.skip_k8s_install, servers_supp_ips)
+    canal_iface = args.canal_iface
+    run(args.reset, args.skip_k8s_install, servers_supp_ips, canal_iface)
 
 
 if __name__ == '__main__':
