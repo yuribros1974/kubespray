@@ -64,7 +64,7 @@ def cli_parser():
     parser.add_argument('-s', '--server', dest='servers', type=_k8s_node_ips, action='append', default=[])
     parser.add_argument('-c', '--client', dest='clients', type=_validate_ip, action='append', default=[])
     parser.add_argument('-a', '--apiserver_vip', dest='apiserver_vip', type=json.loads, default=[])
-    parser.add_argument('-n', '--canal-iface', dest='canal_iface', default='eth0',
+    parser.add_argument('-n', '--canal_iface', dest='canal_iface', default='eth0',
                         help='Interface name for canal to use')
     parser.add_argument('-r', '--reset', action='store_true',
                         help='do reset before deploy, delete restart docker, dont run from within k8s cluster')
