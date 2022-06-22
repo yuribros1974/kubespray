@@ -6,7 +6,6 @@ git submodule update --force --recursive --init
 pwd
 ls -ltrh
 
-
 mv kubespray/* .
 cp -rp  igz-install/* .
 cp -rp igz-kubespray/* .
