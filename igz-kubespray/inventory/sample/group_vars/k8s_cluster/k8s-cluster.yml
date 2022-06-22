@@ -65,18 +65,21 @@ credentials_dir: "{{ inventory_dir }}/credentials"
 
 # Choose network plugin (cilium, calico, kube-ovn, weave or flannel. Use cni for generic cni plugin)
 # Can also be set to 'cloud', which lets the cloud provider setup appropriate routing
-kube_network_plugin: calico
+#### added by devops ####
+kube_network_plugin: canal
 
 # Setting multi_networking to true will install Multus: https://github.com/intel/multus-cni
 kube_network_plugin_multus: false
 
 # Kubernetes internal network for services, unused block of space.
-kube_service_addresses: 10.233.0.0/18
+#### added by devops ####
+kube_service_addresses: 10.192.0.0/13
 
 # internal network. When used, it will assign IP
 # addresses from this range to individual pods.
 # This network must be unused in your network infrastructure!
-kube_pods_subnet: 10.233.64.0/18
+#### added by devops ####
+kube_pods_subnet: 10.200.0.0/13
 
 # internal network node size allocation (optional). This is the size allocated
 # to each node for pod IP address allocation. Note that the number of pods per node is
@@ -93,7 +96,8 @@ kube_pods_subnet: 10.233.64.0/18
 #  - kube_pods_subnet: 10.233.64.0/18
 #  - kube_network_node_prefix: 25
 #  - kubelet_max_pods: 110
-kube_network_node_prefix: 24
+#### added by devops ####
+kube_network_node_prefix: 22
 
 # Configure Dual Stack networking (i.e. both IPv4 and IPv6)
 enable_dual_stack_networks: false
@@ -193,7 +197,8 @@ coredns_k8s_external_zone: k8s_external.local
 enable_coredns_k8s_endpoint_pod_names: false
 
 # Can be docker_dns, host_resolvconf or none
-resolvconf_mode: host_resolvconf
+#### added by devops ####
+resolvconf_mode: docker_dns
 # Deploy netchecker app to verify DNS resolve as an HTTP service
 deploy_netchecker: false
 # Ip address of the kubernetes skydns service
@@ -251,21 +256,29 @@ podsecuritypolicy_enabled: false
 # kubelet_enforce_node_allocatable: pods
 
 ## Optionally reserve resources for OS system daemons.
-# system_reserved: true
+system_reserved: true
 ## Uncomment to override default values
 # system_memory_reserved: 512Mi
 # system_cpu_reserved: 500m
+system_memory_reserved: 4G
+system_cpu_reserved: 500m
+kube_cpu_reserved: 200m
+kube_memory_reserved: 4G
 ## Reservation for master hosts
 # system_master_memory_reserved: 256Mi
 # system_master_cpu_reserved: 250m
+system_master_memory_reserved: 4G
+system_master_cpu_reserved: 500m
+kube_master_cpu_reserved: 200m
+kube_master_memory_reserved: 4G
 
 ## Eviction Thresholds to avoid system OOMs
 # https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#eviction-thresholds
 # eviction_hard: {}
 # eviction_hard_control_plane: {}
-
+#### added by devops ####
 # An alternative flexvolume plugin directory
-# kubelet_flexvolumes_plugins_dir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
+kubelet_flexvolumes_plugins_dir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
 
 ## Supplementary addresses that can be added in kubernetes ssl keys.
 ## That can be useful for example to setup a keepalived virtual IP
@@ -332,3 +345,17 @@ event_ttl_duration: "1h0m0s"
 auto_renew_certificates: false
 # First Monday of each month
 # auto_renew_certificates_systemd_calendar: "Mon *-*-1,2,3,4,5,6,7 03:{{ groups['kube_control_plane'].index(inventory_hostname) }}0:00"
+
+kubelet_custom_flags:
+  - "--image-gc-low-threshold=99"
+  - "--image-gc-high-threshold=100"
+
+kubelet_config_extra_args:
+  evictionHard:
+    memory.available: "100Mi"
+    imagefs.available: "1%"
+    nodefs.available: "1%"
+  kubeReservedCgroup: /systemd/system.slice
+  kubeletCgroups: /systemd/system.slice
+  runtimeCgroups: /systemd/system.slice
+  systemReservedCgroup: /system.slice
