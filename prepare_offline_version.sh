@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 set -ex
 git submodule update --force --recursive --init
 
