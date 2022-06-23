@@ -1,6 +1,7 @@
 ---
 - name: Gather facts
-  hosts: k8s_cluster:etcd:calico_rr
+  #### added by devops ####
+  hosts: k8s_cluster:etcd
   gather_facts: False
   tags: always
   tasks:
