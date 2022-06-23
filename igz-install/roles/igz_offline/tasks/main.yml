@@ -10,13 +10,13 @@
     images_to_save: "{{ images_to_save }} {{ item.value.repo }}:{{ item.value.tag }}"
   with_dict: "{{ downloads }}"
   when:
-  - not skip_downloads|default(false)
+    - not skip_downloads|default(false)
 
 - name: "pull containers"
   shell: "docker pull {{ item.value.repo }}:{{ item.value.tag }}"
   with_dict: "{{ downloads }}"
   when:
-  - not skip_downloads|default(false)
+    - not skip_downloads|default(false)
 
 - name: "create cache directory"
   become: yes
@@ -26,12 +26,12 @@
     recurse: yes
     mode: 0777
   when:
-  - not skip_downloads|default(false)
+    - not skip_downloads|default(false)
 
 - name: "save containers"
   shell: "docker save {{ images_to_save }} | xz -9 > {{ local_release_dir }}/{{ container_cache_name }}"
   when:
-  - not skip_downloads|default(false)
+    - not skip_downloads|default(false)
 
 - name: "copy kubectl with ver to static kubectl"
   copy:
@@ -54,12 +54,12 @@
     src: "{{ release_cache_dir }}/"
     dest: "{{ local_release_dir }}"
   when:
-  - skip_downloads|default(false)
+    - skip_downloads|default(false)
 
 - name: "load containers cache"
   shell: "docker load -i {{ local_release_dir }}/{{ container_cache_name }}"
   when:
-  - skip_downloads|default(false)
+    - skip_downloads|default(false)
 
 - name: "copy calicoctl to nodes"
   copy:
@@ -67,5 +67,5 @@
     dest: "/usr/local/bin/calicoctl"
     mode: "0755"
   when:
-  - skip_downloads|default(false)
+    - skip_downloads|default(false)
 

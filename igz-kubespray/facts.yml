@@ -1,6 +1,5 @@
 ---
 - name: Gather facts
-  #### added by devops ####
   hosts: k8s_cluster:etcd
   gather_facts: False
   tags: always
