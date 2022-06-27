@@ -9,16 +9,16 @@ downloads:
   # from roles/donwloads/defaults
   coredns:
     repo: "{{ google_containers }}/coredns/coredns"
-    tag: "v1.8.0"
+    tag: "v1.8.6"
 
 
   k8s-dns-node-cache:
     repo: "{{ google_containers }}/dns/k8s-dns-node-cache"
-    tag: "1.17.1"
+    tag: "1.21.1"
 
   cluster-proportional-autoscaler-amd64:
     repo: "{{ google_containers }}/cpa/cluster-proportional-autoscaler-amd64"
-    tag: "1.8.3"
+    tag: "1.8.5"
 
   k8s-helm:
     repo: "lachlanevenson/k8s-helm"
@@ -26,7 +26,7 @@ downloads:
 
   metrics-scraper:
     repo: "docker.io/kubernetesui/metrics-scraper"
-    tag: "v1.0.5"
+    tag: "v1.0.7"
 
   etcd:
     repo: "quay.io/coreos/etcd"
@@ -50,7 +50,7 @@ downloads:
 
   nginx:
     repo: "nginx"
-    tag: "1.19"
+    tag: "1.21.4"
 
   pause-amd64:
     repo: "{{ google_containers }}/pause-amd64"
