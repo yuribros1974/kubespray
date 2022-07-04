@@ -57,9 +57,6 @@
   tags:
     - network
 
-
-
-
 - name: reset | stop services
   service:
     name: "{{ item }}"
@@ -91,18 +88,55 @@
     - containerd
     - crio
 
-- name: reset | Remove Docker
-  include_role:
-    name: container-engine/docker
-    tasks_from: reset
-  when: container_manager == 'docker'
+## addded by devops ##
+#- name: reset | Remove Docker
+#  include_role:
+#    name: container-engine/docker
+#    tasks_from: reset
+#  when: container_manager == 'docker'
+#  tags:
+#    - docker
+
+## addded by devops ##
+- name: reset | remove docker dropins
+  file:
+    path: "/etc/systemd/system/docker.service.d/{{ item }}"
+    state: absent
+  with_items:
+    - docker-dns.conf
+    - docker-options.conf
+    - http-proxy.conf
+    - docker-orphan-cleanup.conf
+  register: docker_dropins_removed
   tags:
     - docker
+
 
 - name: reset | systemctl daemon-reload  # noqa 503
   systemd:
     daemon_reload: true
-  when: services_removed.changed
+  when: services_removed.changed or docker_dropins_removed.changed
+
+## addded by devops ##
+- name: reset | remove all containers
+  shell: "set -o pipefail && {{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
+  args:
+    executable: /bin/bash
+  register: remove_all_containers
+  retries: 4
+  until: remove_all_containers.rc == 0
+  delay: 5
+  when: container_manager == "docker"
+  tags:
+    - docker
+
+- name: reset | restart docker if needed  # noqa 503
+  service:
+    name: docker
+    state: restarted
+  when: docker_dropins_removed.changed and container_manager == "docker"
+  tags:
+    - docker
 
 - name: reset | check if crictl is present
   stat:
@@ -212,24 +246,25 @@
   tags:
     - services
 
-- name: reset | remove containerd
-  when: container_manager == 'containerd'
-  block:
-    - name: reset | stop containerd service
-      service:
-        name: containerd
-        state: stopped
-      failed_when: false
-      tags:
-        - services
-
-    - name: reset | remove containerd service
-      file:
-        path: /etc/systemd/system/containerd.service
-        state: absent
-      register: services_removed
-      tags:
-        - services
+## addded by devops ##
+#- name: reset | remove containerd
+#  when: container_manager == 'containerd'
+#  block:
+#    - name: reset | stop containerd service
+#      service:
+#        name: containerd
+#        state: stopped
+#      failed_when: false
+#      tags:
+#        - services
+#
+#    - name: reset | remove containerd service
+#      file:
+#        path: /etc/systemd/system/containerd.service
+#        state: absent
+#      register: services_removed
+#      tags:
+#        - services
 
 - name: reset | gather mounted kubelet dirs  # noqa 301
   shell: set -o pipefail && mount | grep /var/lib/kubelet/ | awk '{print $3}' | tac
@@ -382,25 +417,26 @@
   tags:
     - files
 
-- name: reset | remove containerd binary files
-  file:
-    path: "{{ containerd_bin_dir }}/{{ item }}"
-    state: absent
-  with_items:
-    - containerd
-    - containerd-shim
-    - containerd-shim-runc-v1
-    - containerd-shim-runc-v2
-    - containerd-stress
-    - crictl
-    - critest
-    - ctd-decoder
-    - ctr
-    - runc
-  ignore_errors: true  # noqa ignore-errors
-  when: container_manager == 'containerd'
-  tags:
-    - files
+## addded by devops ##
+#- name: reset | remove containerd binary files
+#  file:
+#    path: "{{ containerd_bin_dir }}/{{ item }}"
+#    state: absent
+#  with_items:
+#    - containerd
+#    - containerd-shim
+#    - containerd-shim-runc-v1
+#    - containerd-shim-runc-v2
+#    - containerd-stress
+#    - crictl
+#    - critest
+#    - ctd-decoder
+#    - ctr
+#    - runc
+#  ignore_errors: true  # noqa ignore-errors
+#  when: container_manager == 'containerd'
+#  tags:
+#    - files
 
 - name: reset | remove dns settings from dhclient.conf
   blockinfile:
@@ -454,3 +490,14 @@
   tags:
     - services
     - network
+
+
+## addded by devops ##
+- name: reset | Restart docker daemon
+  systemd:
+    name: docker
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  ignore_errors: yes
+  when: container_manager == "docker"

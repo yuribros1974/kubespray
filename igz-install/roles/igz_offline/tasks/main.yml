@@ -1,12 +1,4 @@
 ---
-- name: "restart docker service"
-  service:
-    name: docker
-    state: restarted
-  register: docker_service_restart
-
-- debug: var=docker_service_restart
-
 
 - name: "init images_to_download variable"
   set_fact:
